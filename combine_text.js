@@ -57,7 +57,7 @@ const two_word_list = [
     [badWordPart.NU, badWordPart.GEUM, badWordPart.MA + '?'],
 ];
 two_word_list.map((words)=>{
-    regexs.push(combineWords(words[0], words[1]));
+    regexs.push(combineWords(...words));
 });
 // 1글자
 const one_word_list = [
