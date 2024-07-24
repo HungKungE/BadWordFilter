@@ -1,24 +1,30 @@
+const BETWEEN = '[^\w]{0,1}';
+
 const beautiful = ['어머','아이쿠','뾰롱'];
 
 const badWordPart = {
-    // ONE WORD : NOM, JOT, GAE, SYANG
-    // ELSE : SIBAL, SAEKI, EAEMI, BEUNGSIN, NUGEUMMA
-    SI : ['시','씨','슈','쓔','쉬','쉽','쒸','쓉','씌'],
-    BAL : ['바','발','벌','빠','빡','빨','뻘','파','팔','펄'],
-    NOM : ['놈', '년', '련'],
-    SYANG : ['썅', '상', '씹', '쌍'],
-    SAE : ['새','색','샊','섀','섁','섂','세','섹','섺','셰','셱','셲','시',"쇆"],
-    KI : ['끼','키','끠'],
-    JOT : ['좆','좇','졷','좄','좃','좉','졽'],
-    EAE : ['애','에', '니'],
-    MI : ['미','비'],
-    NU : ['느'],
-    GEUM : ['금'],
-    BEUNG : ['병', '빙'],
-    SIN : ['신','싄','씐','씬']
+    // (MAIN) + SUB : (SI + BAL) + NOM or [SA+KI] | (SYANG) + NOM or [SA+KI] | (BEUNG + SIN) + NOM or [SA+KI]
+    // TWO WORD : EAE + MI, NU + GEUM + MA, SAE+KI
+    // ONE WORD : JOT
+    SI : '[시씨슈쓔쉬쉽쒸쓉씌ㅅㅆ]',
+    BAL : '[바발벌빠빡빨뻘파팔펄ㅂㅃㅍ]',
+    NOM : '[놈년]',
+    SYANG : '[썅상씹쌍]',
+    SAE : '[새색샊섀섁섂세섹섺셰셱셲시쇆]',
+    KI : '[기끼키끠긔킈귀퀴뀌]',
+    JOT : '[좆좇졷좄좃좉졽]',
+    NA : '[나니내늬]',
+    EAE : '[애에니]',
+    MI : '[미비]',
+    NU : '[느]',
+    GEUM : '[금]',
+    MA : '[마]',
+    BEUNG : '[병빙븅]',
+    SIN : '[신싄씐씬]'
 };
 
 module.exports = {
+    BETWEEN,
     beautiful,
     badWordPart
 }

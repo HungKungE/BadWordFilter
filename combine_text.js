@@ -1,40 +1,75 @@
 const fs = require('fs');
 
-const { badWordPart } = require('./constants');
+const { BETWEEN, badWordPart } = require('./constants');
 
-const getBadTwoWords = (A, B) => {
-    const combinations = [];
-    for (const a of A) {
-        for (const b of B) {
-            combinations.push(a + b);
-        }
-    }
-    return combinations;
+const getBadWordsRegex = (words) => {
+    const comMain = combineWords(...words.main);
+    const comSub = combineSubWords(
+        words.sub[0],
+        combineWords(...words.sub[1])
+    );
+    
+    return combineWords(comMain, comSub + '?');
 }
 
-let total_words = [];
-// 1글자
-const one_word_list = [
-    badWordPart.NOM,
-    badWordPart.JOT,
-    badWordPart.SYANG
+const combineWords = (...words) => {
+    return words.join(BETWEEN);
+}
+
+const combineSubWords = (A, B) => {
+    return '(' + A + '|' + B + ')';
+}
+
+let regexs = [];
+
+// 3글자 이상
+const words_list = [
+    {
+        main : [badWordPart.SI, badWordPart.BAL],
+        sub : [
+            badWordPart.NOM,
+            [badWordPart.SAE, badWordPart.KI]
+        ]
+    },
+    {
+        main : [badWordPart.SYANG],
+        sub : [
+            badWordPart.NOM,
+            [badWordPart.SAE, badWordPart.KI]
+        ]
+    },
+    {
+        main : [badWordPart.BEUNG, badWordPart.SIN],
+        sub : [
+            badWordPart.NOM,
+            [badWordPart.SAE, badWordPart.KI]
+        ]
+    }
 ];
-one_word_list.map((list)=>{
-    total_words = [...total_words, ...list];
-});
-// 2글자
-const two_word_list = [
-    [badWordPart.SI, badWordPart.BAL],
-    [badWordPart.SAE, badWordPart.KI],
-    [badWordPart.EAE, badWordPart.MI],
-    [badWordPart.NU, badWordPart.GEUM],
-    [badWordPart.BEUNG, badWordPart.SIN],
-];
-two_word_list.map((list)=>{
-    total_words = [...total_words, ...getBadTwoWords(list[0], list[1])];
+words_list.map((words)=>{
+    regexs.push(getBadWordsRegex(words));
 });
 
-fs.writeFile('badWords.json', JSON.stringify(total_words, null, 2), (err) => {
+// 2글자
+const two_word_list = [
+    [badWordPart.SAE, badWordPart.KI],
+    [badWordPart.EAE, badWordPart.MI],
+    [badWordPart.NU, badWordPart.GEUM, badWordPart.MA + '?'],
+];
+two_word_list.map((words)=>{
+    regexs.push(combineWords(words[0], words[1]));
+});
+// 1글자
+const one_word_list = [
+    badWordPart.JOT,
+    badWordPart.SYANG,
+    badWordPart.NOM
+];
+one_word_list.map((word)=>{
+    regexs.push(word);
+});
+
+fs.writeFile('badWords.json', JSON.stringify(regexs, null, 2), (err) => {
     if (err) {
         console.error('Error writing to file', err);
     } else {
